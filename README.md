@@ -7,6 +7,9 @@ A Guide on how to setup Tailscale on the EdgeRouter.
 > [!CAUTION]
 > This is not actively maintained and I am not responsible if this script breaks any configuration or environment. Use at your own risk. It is not possible for me to test every use case and therefore I cannot assume responsibility when things go wrong.
 
+> [!WARNING]
+>  This Install will not survive Firmware Upgrades so it will need to be re done every time the router is updated. 
+
 # Guide
 
 SSH Into Your Edge Router and login with an admin account, By default thats ubnt.
@@ -37,7 +40,10 @@ After that we will need to make them executeable with the chmod command.
 chmod +x /usr/sbin/tailscaled
 chmod +x /usr/bin/tailscale
 ~~~
-Congratualtions, You should now have installed tailscale to your edge router. but it will not start on boot so we have to create an init script. Coppy this innit script to create a service with the following command
+Congratualtions, You should now have installed tailscale to your edge router. But the daemon wont be running so we will need to create a service and install it with.
+
+> [!WARNING]
+> The Tailscale Daemon wont start on reboot so a init script must becreated following the steps bellow. 
 ~~~ bash
 cat > /etc/init.d/tailscaled <<'EOF'
 #!/bin/sh
@@ -88,8 +94,4 @@ Then Make it executable and Update OpenRC with this command
 ~~~ bash
 chmod +x /etc/init.d/tailscaled
 update-rc.d tailscaled defaults
-~~~
-The Full install is now done. Login and setup tailscale like usual with.
-~~~ bash
-tailscale up
-~~~
+
